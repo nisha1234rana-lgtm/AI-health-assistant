@@ -5,6 +5,9 @@ import joblib
 import numpy as np
 import pandas as pd
 import uuid
+import os
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
 
 # ---------------- App ----------------
 app = FastAPI(title="AI Symptom Assistant (Educational)")
@@ -14,10 +17,43 @@ DISCLAIMER = (
     "If symptoms are severe, worsening, or you feel unsafe, seek professional medical care."
 )
 
-# ---------------- Load model artifacts ----------------
-rf = joblib.load("../models/rf_disease_model.joblib")
-symptom_columns = joblib.load("../models/symptom_columns.joblib")
+# ---------------- Load / Train model artifacts ----------------
+MODEL_PATH = "../models/rf_disease_model.joblib"
+COLS_PATH = "../models/symptom_columns.joblib"
+DATA_PATH = "../data/synthetic_symptom_disease_30_v2.csv"
+
+def train_and_save():
+    df = pd.read_csv(DATA_PATH)
+    X = df.drop("prognosis", axis=1)
+    y = df["prognosis"]
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42, stratify=y
+    )
+
+    rf_model = RandomForestClassifier(
+        n_estimators=400,
+        random_state=42,
+        class_weight="balanced"
+    )
+    rf_model.fit(X_train, y_train)
+
+    os.makedirs("../models", exist_ok=True)
+    joblib.dump(rf_model, MODEL_PATH)
+    joblib.dump(list(X.columns), COLS_PATH)
+
+    return rf_model, list(X.columns)
+
+# If model files exist, load them; otherwise train from dataset
+if os.path.exists(MODEL_PATH) and os.path.exists(COLS_PATH):
+    rf = joblib.load(MODEL_PATH)
+    symptom_columns = joblib.load(COLS_PATH)
+else:
+    rf, symptom_columns = train_and_save()
+
 classes = rf.classes_
+
+# Recommendations file is inside backend/
 REC_DF = pd.read_csv("disease_recommendations.csv")
 
 def get_recommendation_for(disease: str):
