@@ -1,7 +1,8 @@
 import streamlit as st
 import requests
 
-API = "http://127.0.0.1:8001"
+import os
+API = os.getenv("API_URL", "http://127.0.0.1:8001")
 
 st.set_page_config(page_title="AI Health Assistant (Educational)", layout="centered")
 
