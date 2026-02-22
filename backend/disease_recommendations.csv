@@ -1,0 +1,7 @@
+disease,self_care,warning_signs
+Food Poisoning,"Hydration, rest, bland foods when tolerated","Blood in stool, severe dehydration, persistent vomiting, high fever"
+UTI,"Drink fluids, rest, consider medical evaluation","Back/flank pain, fever/chills, blood in urine, worsening pain"
+Gastritis,"Avoid spicy/acidic foods, smaller meals, hydration","Severe abdominal pain, black/tarry stools, vomiting blood"
+Pneumonia,"Rest, hydration, consider urgent evaluation if breathing symptoms","Trouble breathing, chest pain, confusion, low oxygen"
+COVID-like Illness,"Rest, fluids, isolate if contagious risk","Shortness of breath, chest pain, confusion, worsening symptoms"
+Influenza,"Rest, fluids, monitor fever","Breathing difficulty, dehydration, symptoms worsening after improvement"
